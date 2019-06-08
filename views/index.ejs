@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chatroom</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <div class="container-chatbody">
+        <div class="header-chatbody">
+
+        </div>
+        <div class="chatbody">
+
+        </div>
+        <div class="footer-chatbody">
+            <input class="message-input" name="message-input" type="text">
+            <div class="btn send-message">Send</div>
+        </div>
+    </div>
+    <script>
+        $(() => {
+            $(document).on("click", ".btn.send-message", () => { SendMessage() });
+            var socket = io();
+
+            socket.on('chat message', (message) => {
+                console.log(message);
+                ShowNewMessage(message);
+            });
+
+            var ShowNewMessage = (message) => {
+                $(".chatbody").append(message);
+            };
+
+            var SendMessage = () => {
+                let message = $(".message-input").val();
+                if (message) { socket.emit('chat message', message); }
+            };
+        });
+    </script>
+</body>
+
+</html>
