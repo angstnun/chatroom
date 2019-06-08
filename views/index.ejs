@@ -17,7 +17,7 @@
 
         </div>
         <div class="chatbody">
-
+            <div class="chat-message base"></div>
         </div>
         <div class="footer-chatbody">
             <input class="message-input" name="message-input" type="text">
@@ -27,6 +27,12 @@
     <script>
         $(() => {
             $(document).on("click", ".btn.send-message", () => { SendMessage() });
+            $(document).on('keypress', (e) => {
+                var MessageInputHasFocus = $('.message-input').is(':focus');
+                if (e.which == 13 && MessageInputHasFocus) {
+                    SendMessage();
+                }
+            });
             var socket = io();
 
             socket.on('chat message', (message) => {
@@ -35,12 +41,23 @@
             });
 
             var ShowNewMessage = (message) => {
-                $(".chatbody").append(message);
+                let chatMessage = $('.chat-message.base').clone();
+                chatMessage.text(message);
+                chatMessage.removeClass('base');
+                $(".chatbody").append(chatMessage);
+                ScrollDownToBottomOFChat();
             };
+
+            var ScrollDownToBottomOFChat = () => {
+                $(".chatbody").animate({ scrollTop: $('.chatbody').prop("scrollHeight") }, 1000);
+            }
 
             var SendMessage = () => {
                 let message = $(".message-input").val();
-                if (message) { socket.emit('chat message', message); }
+                if (message) {
+                    $(".message-input").val("");
+                    socket.emit('chat message', message);
+                }
             };
         });
     </script>
