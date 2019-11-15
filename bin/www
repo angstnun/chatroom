@@ -31,7 +31,7 @@ var io = require('socket.io')(server), socketManager = require('../backend/Socke
  * Listen on provided port, on all network interfaces.
  */
 
-server.listen(port);
+module.exports = server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
